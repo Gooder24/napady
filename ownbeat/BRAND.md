@@ -113,8 +113,8 @@ product does (the plain readout).
   number on a screen. No second font, no weights; size and colour carry the hierarchy.
 - **Colour.** One dark palette, nothing else: surface `#000a07`, panels `#0a1512` to
   `#26302c`, text `#f0f0eb`, muted `#b4b4b0`, one accent `#628790`. State colours only for state: `#a1d289`
-  within range, `#e2c08d` outside range, `#e5786d` failed import. A light theme uses the same tokens inverted,
-   No gradients, no glow, no shadows.
+  within range, `#e2c08d` outside range, `#e5786d` failed import. A light theme uses the same tokens inverted.
+  No gradients, no glow, no shadows.
 - **Shape.** Rounded panels and buttons; only the pixel art itself is square. 2 px
   borders.
 - **Charts.** Drawn on the pixel grid: stepped lines, no smoothing, no area gradients. The personal baseline band

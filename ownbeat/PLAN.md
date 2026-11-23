@@ -17,6 +17,8 @@ nothing and says what is missing.
 - The nightly HRV summary exists for 10 nights, but the files hold 889 five-minute `hrv_value` records. Battery
   (`battery`, 791 records) is written only during activities on this model. Both are read since phase 0.
 - SpO₂: 0 samples (the pulse oximeter was off).
+- The old table `samples(kind, ts, value, src)` was keyed by `(kind, ts)`, so a second device would overwrite the
+  first: the schema knew no device, sensor or density. That was the first thing to change; phase 0 changed it.
 - Three numbers the engine computed have no published method in that form, and were moved to "Experimental":
   - recovery 0–100: the z-scores are fine, the weights 0.45/0.25/0.10/0.25 are ours;
   - strain 0–21: `7·ln(1+TRIMP/25)` is our scale; only TRIMP is published;
@@ -177,7 +179,7 @@ adapters ──> common schema (SQLite) ──> metric register ──> health.j
   baseline, citation, class). The catalogue, the Unlock screen and the "we add" column of the device card are all
   generated from that one declaration.
 - **UI**: a local web page without a build step; the CLI and the calendar read the same `health.json`.
-- **Cost**: computed only at import (seconds today); no daemon except a static file server.
+- **Cost**: Python and SQLite, computed only at import (seconds today); no daemon except a static file server.
 
 ## 10. Privacy
 
@@ -193,8 +195,8 @@ kinds of data and metrics people are interested in, never their numbers.
 - Cloud adapters download with the user's own token straight to the user; the token sits in a file with mode 600.
 - It listens only on a Tailscale address or localhost.
 - Out: export the whole database and archive in one step. Gone: deleting a device deletes its data and files.
-- Health data is a special category under GDPR (Art. 9). Self-hosted, there is no data controller; a hosted
-  version for others would change that, so none is planned.
+- Health data is a special category under GDPR (Art. 9). As long as everyone hosts it themselves, we are not the
+  data controller. A hosted version for others would change that, so none is planned.
 
 ## 11. Legal position (EU; not legal advice)
 
@@ -219,12 +221,19 @@ Show it once to someone who does MDR work before a public release.
 | **3 Second device** | one more adapter and the Who-measures-what screen, tested on a real second device | two devices side by side, difference in the chart, source choice works |
 | **4 For others** | name, site, one-command install, device database with contributions, remaining adapters, legal check | a stranger gets it running without the author |
 
+**State on 20 Nov 2026:** phase 0 is built (wristlogic commits `25b05b0`, `cfb0395`, `26a1b05`). Samples belong to
+the device that wrote them, with a density per day; 5-min HRV and battery are read too. The author's database was
+rebuilt from the file archive with the same numbers (13 nights, 467 days), and the old one kept beside it as
+`wristlogic.v1.db`. `register.py` is the metric register with gates; `wristlogic odomkni` shows locked metrics with
+the reason and a countdown. Recovery 0–100 and strain 0–21 show only under "Experimental". Phase 1 was next.
+
 ## 13. Decisions taken (20 Nov 2026)
 
 1. **Name: Ownbeat.** No domain or trademark yet. Before going public: search TMview (classes 9, 42, 44) and weigh
    the similarity to "Own Health", then buy `ownbeat.app` (`.com` is taken). The repo and engine stay `wristlogic`.
 2. **Audience:** the author first, public in phase 4.
-3. **Recovery 0–100 and strain 0–21** live under "Experimental"; the main view shows the components (HRV, resting
+3. **Recovery 0–100 and strain 0–21** live under "Experimental" (`"experimental": true` in `config.json`, since
+   phase 0); the main view shows the components (HRV, resting
    HR, breathing against your usual) and TRIMP.
 4. **First extra adapter: Gadgetbridge** (its database export). One adapter covers hundreds of devices without the
    vendor's cloud, including the Colmi R02 ring (~20 €, the cheapest second device for a desk; Gadgetbridge supports
