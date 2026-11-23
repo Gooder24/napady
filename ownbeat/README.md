@@ -7,8 +7,10 @@ and says what is missing.
 
 Stopped: 23 November 2026.
 
-- **The idea and research** (plan, metric catalogue with citations, how to get data out of each brand, naming and
-  tone): [wristlogic/idea](https://github.com/Gooder24/wristlogic/tree/main/idea)
+- **The idea and research**: [PLAN.md](PLAN.md) (onboarding, device card, unlock levels, metric catalogue with
+  citations, multi-device rules, trust, architecture, privacy, EU legal position, phases), [DEVICES.md](DEVICES.md)
+  (how to get data out of each brand without the vendor's permission), [BRAND.md](BRAND.md) (names checked, tone,
+  sample copy, visual direction). These are the current versions; the copy in wristlogic's `idea/` is older.
 - **Working code** (phase 0): [Gooder24/wristlogic](https://github.com/Gooder24/wristlogic), Python, AGPL-3.0-or-later.
   Reads a Garmin watch over USB, stores samples per device, computes sleep, resting heart rate, SRI, HRV against a
   personal baseline, TRIMP and the Banister model, and lists which metrics are still locked and why.
